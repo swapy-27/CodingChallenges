@@ -1,19 +1,19 @@
 server:
   port: 8080
 
-spring:
+app:
   datasource:
     db1:
-      url: jdbc:mysql://localhost:3306/url-shortener-db-1
-      password: root
-      username: Swapy@27
+      jdbc-url: jdbc:mysql://localhost:3306/url-shortener-db-1
+      username: root
+      password: Swapy@27
     db2:
-      url: jdbc:mysql://localhost:3306/url-shortener-db-2
-      password: root
-      username: Swapy@27
+      jdbc-url: jdbc:mysql://localhost:3306/url-shortener-db-2
+      username: root
+      password: Swapy@27
     db3:
-      url: jdbc:mysql://localhost:3306/url-shortener-db-3
-      password: root
-      username: Swapy@27
+      jdbc-url: jdbc:mysql://localhost:3306/url-shortener-db-3
+      username: root
+      password: Swapy@27
 
 
