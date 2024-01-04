@@ -3,14 +3,15 @@ package codingChallenges.urlShortener.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 
 @Entity
 @Table(name = "url_table")
 @AllArgsConstructor
+@Getter
 public class URL {
     @Id
-
     private Long id;
 
     @Column
@@ -28,4 +29,13 @@ public class URL {
 //        this.id=id;
 //    }
 
+
+    @Override
+    public String toString() {
+        return "URL{" +
+                "id=" + id +
+                ", uniqueKey='" + uniqueKey + '\'' +
+                ", originalUrl='" + originalUrl + '\'' +
+                '}';
+    }
 }

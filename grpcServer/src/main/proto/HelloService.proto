@@ -1,0 +1,21 @@
+//tell compiler which syntax to use
+syntax = "proto3";
+//use multiple files rather the default single file to generate code
+option java_multiple_files = true;
+// package where u wanna generate code
+option java_package = "com.example.grpc";
+
+// define the payload u wanna transfer -- unique no, here called tag , grpc uses tag internally to represent attribute
+message HelloRequest {
+  string firstName = 1;
+  string lastName = 2;
+}
+
+message HelloResponse {
+  string greeting = 1;
+}
+
+// a unary grpc service contract
+service HelloService {
+  rpc hello(HelloRequest) returns (HelloResponse);
+}

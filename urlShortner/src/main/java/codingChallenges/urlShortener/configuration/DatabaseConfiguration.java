@@ -1,6 +1,8 @@
 package codingChallenges.urlShortener.configuration;
 
 import com.zaxxer.hikari.HikariDataSource;
+import jakarta.persistence.EntityManagerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -25,6 +27,7 @@ import java.util.Properties;
 @EnableJpaRepositories(
         entityManagerFactoryRef = "multiEntityManager",
         transactionManagerRef = "multiTransactionManager")
+
 @EntityScan("codingChallenges.urlShortener.entity")
 public class DatabaseConfiguration {
 
@@ -79,12 +82,13 @@ public class DatabaseConfiguration {
         return em;
     }
 
-    @Bean(name = "transactionManager")
-    public PlatformTransactionManager multiTransactionManager() {
+    @Bean(name = "multiTransactionManager")
+    @Qualifier("transactionManager")
+    public PlatformTransactionManager multiTransactionManager(@Qualifier("multiEntityManager") EntityManagerFactory multiEntityManager) {
         JpaTransactionManager transactionManager
-                = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(
-                multiEntityManager().getObject());
+                = new JpaTransactionManager(multiEntityManager);
+//        transactionManager.setEntityManagerFactory(
+//                multiEntityManager().getObject());
         return transactionManager;
     }
 
@@ -103,10 +107,10 @@ public class DatabaseConfiguration {
         Properties properties = new Properties();
         properties.put("hibernate.show_sql", true);
         properties.put("hibernate.format_sql", true);
-        properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
-//        properties.put("hibernate.id.new_generator_mappings", false);
+        properties.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+        properties.put("hibernate.id.new_generator_mappings", false);
         properties.put("hibernate.jdbc.lob.non_contextual_creation", true);
-        properties.put("hibernate.ddl-auto", "create");
+//        properties.put("hibernate.ddl-auto", "create");
         return properties;
     }
 

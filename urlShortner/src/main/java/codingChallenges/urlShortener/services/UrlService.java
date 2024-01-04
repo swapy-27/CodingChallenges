@@ -2,9 +2,9 @@ package codingChallenges.urlShortener.services;
 
 import codingChallenges.urlShortener.configuration.ClientNames;
 import codingChallenges.urlShortener.configuration.DBContextHolder;
+import codingChallenges.urlShortener.entity.Entity1;
 import codingChallenges.urlShortener.entity.URL;
 import codingChallenges.urlShortener.repositories.UrlShortenerRepository;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,27 +18,70 @@ public class UrlService {
     @Autowired
     private UrlShortenerRepository urlShortenerRepository;
 
-    public String generateShortUrl(Long id, String longUrl) {
 
-        byte[] hashBytes = getKey(longUrl);
-
-
-        // Convert the byte array to a hexadecimal string
-        String uniqueKey = Base64.getEncoder().encodeToString(hashBytes);
-        URL url = new URL(id,uniqueKey, longUrl);
-
-
-        ClientNames db = getDBServer(hashBytes);
-
-        DBContextHolder.setCurrentDb(db);
-
-        urlShortenerRepository.save(url);
-
-
-        return uniqueKey;
+    public String getClientNames(String client) {
+        switch (client) {
+            case "db1":
+                DBContextHolder.setCurrentDb(ClientNames.DB1);
+                break;
+            case "db2":
+                DBContextHolder.setCurrentDb(ClientNames.DB2);
+                break;
+            case "db3":
+                DBContextHolder.setCurrentDb(ClientNames.DB3);
+                break;
+        }
+      URL url = urlShortenerRepository.findByUniqueKey("abcdef1234");
+        if(url != null) {
+            return "found in database: " + client + " with values " + url.toString();
+        }
+        return "found in " + client + " nada!";
     }
 
+    public String createUrl(String client , URL url){
+
+        switch (client) {
+            case "db1":
+                DBContextHolder.setCurrentDb(ClientNames.DB1);
+                break;
+            case "db2":
+                DBContextHolder.setCurrentDb(ClientNames.DB2);
+                break;
+            case "db3":
+                DBContextHolder.setCurrentDb(ClientNames.DB3);
+                break;
+        }
+
+        URL entity  = urlShortenerRepository.save(url);
+        if(url != null) {
+            return "found in database: " + client + " with values " + url.toString();
+        }
+        return "found in " + client + " nada!";
+
+    }
+
+//    public String generateShortUrl( String longUrl) {
+
+//        byte[] hashBytes = getKey(longUrl);
+//
+//
+//        // Convert the byte array to a hexadecimal string
+//        String uniqueKey = Base64.getEncoder().encodeToString(hashBytes);
+//        URL url = new URL(id, uniqueKey, longUrl);
+//
+//
+//        ClientNames db = getDBServer(hashBytes);
+//
+//        DBContextHolder.setCurrentDb(db);
+//
+//        urlShortenerRepository.save(url);
+//
+
+//        return uniqueKey;
+//    }
+
     ;
+
 
     public ClientNames getDBServer(byte[] hashBytes) {
         long numericHash = convertBytesToLong(hashBytes);
@@ -68,7 +111,7 @@ public class UrlService {
         } catch (NoSuchAlgorithmException e) {
             // Handle the exception
             e.printStackTrace();
-           return null;
+            return null;
         }
     }
 
@@ -82,6 +125,31 @@ public class UrlService {
         }
         return numericValue;
     }
+
+    public Boolean isUrlExists(String url) {
+        String val = urlShortenerRepository.findByOriginalUrl(url);
+        return null != val ? true : false;
+    }
+
+    public String getOriginalUrl(String uniqueKey) {
+        URL url = urlShortenerRepository.findByUniqueKey(uniqueKey);
+
+        if (null == url) {
+            return "";
+        }
+
+        return url.getOriginalUrl();
+    }
+
+    ;
+
+    public Boolean removeUrl(String uniqueKey) {
+        URL url = urlShortenerRepository.findByUniqueKey(uniqueKey);
+        urlShortenerRepository.delete(url);
+        return true;
+    }
+
+    ;
 
 
 }
