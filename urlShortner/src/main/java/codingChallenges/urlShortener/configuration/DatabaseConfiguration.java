@@ -24,10 +24,11 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(
-        entityManagerFactoryRef = "multiEntityManager",
-        transactionManagerRef = "multiTransactionManager")
+//@EnableJpaRepositories(
+//        entityManagerFactoryRef = "multiEntityManager",
+//        transactionManagerRef = "multiTransactionManager")
 
+@EnableJpaRepositories(basePackages = "codingChallenges.urlShortener.repositories")
 @EntityScan("codingChallenges.urlShortener.entity")
 public class DatabaseConfiguration {
 
@@ -69,7 +70,7 @@ public class DatabaseConfiguration {
     }
 
     //add multi entity configuration code
-    @Bean(name = "multiEntityManager")
+    @Bean(name = "entityManager")
     public LocalContainerEntityManagerFactoryBean multiEntityManager() {
         LocalContainerEntityManagerFactoryBean em
                 = new LocalContainerEntityManagerFactoryBean();
@@ -82,9 +83,9 @@ public class DatabaseConfiguration {
         return em;
     }
 
-    @Bean(name = "multiTransactionManager")
-    @Qualifier("transactionManager")
-    public PlatformTransactionManager multiTransactionManager(@Qualifier("multiEntityManager") EntityManagerFactory multiEntityManager) {
+    @Bean(name = "transactionManager")
+//    @Qualifier("transactionManager")
+    public PlatformTransactionManager multiTransactionManager(@Qualifier("entityManager") EntityManagerFactory multiEntityManager) {
         JpaTransactionManager transactionManager
                 = new JpaTransactionManager(multiEntityManager);
 //        transactionManager.setEntityManagerFactory(

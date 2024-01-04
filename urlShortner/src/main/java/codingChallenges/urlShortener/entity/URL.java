@@ -3,6 +3,7 @@ package codingChallenges.urlShortener.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Generated;
 import lombok.Getter;
 
 
@@ -12,6 +13,7 @@ import lombok.Getter;
 @Getter
 public class URL {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column
@@ -21,6 +23,11 @@ public class URL {
 
 
     public URL() {
+    }
+
+    public URL(String uniqueKey, String originalUrl) {
+        this.uniqueKey=uniqueKey;
+        this.originalUrl = originalUrl;
     }
 
 //    public URL(Long id , String uniqueKey, String originalUrl) {

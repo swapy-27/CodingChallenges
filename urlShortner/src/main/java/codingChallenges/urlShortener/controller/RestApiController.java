@@ -2,6 +2,7 @@ package codingChallenges.urlShortener.controller;
 
 import codingChallenges.urlShortener.entity.Request;
 import codingChallenges.urlShortener.entity.Response;
+import codingChallenges.urlShortener.entity.ResponseDTO;
 import codingChallenges.urlShortener.entity.URL;
 import codingChallenges.urlShortener.services.UrlService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,34 +17,19 @@ public class RestApiController {
     @Autowired
     private UrlService urlService;
 
+    @PostMapping("/api/v1/shortUrl")
+    public ResponseEntity<Response> addUrl(@RequestBody String originalUrl) {
 
-    @GetMapping("/get/{clientdb}")
-    public String findFromDatabase(@PathVariable String clientdb) {
-        return urlService.getClientNames(clientdb);
+        Response responseDTO = urlService.generateShortUrl(originalUrl);
+
+        if (responseDTO.getClass() == ResponseDTO.class) {
+            return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(responseDTO, HttpStatus.BAD_REQUEST);
+        }
     }
-//
-//        @PostMapping("/api/v1/addUrl")
-//        public ResponseEntity<String> addUrl(@RequestBody String url) {
-//            //check if already exist
-////            if(urlService.isUrlExists(url)) {
-////                return  new ResponseEntity<>("Url Already exists",HttpStatus.BAD_REQUEST);
-////            }
-////
-////
-////            String uniqueKey = urlService.generateShortUrl(url);
-////            String shortUrl = "http://localhost:8080/" + uniqueKey;
-////
-////            Response response = new Response(uniqueKey, shortUrl);
-//            urlService.createUrl();
-//            return new ResponseEntity<>(response.toString(), HttpStatus.OK);
-//        }
 
-    @PostMapping("/api/v1/{clientDB}")
-    public ResponseEntity<String> addUrl(@RequestBody URL url , @PathVariable String clientDB) {
-
-        String response = urlService.createUrl(clientDB,url);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+    ;
 
     @GetMapping("/{urlKey}")
     public ResponseEntity<String> getUrl(@PathVariable String urlKey) {
@@ -57,6 +43,8 @@ public class RestApiController {
 
     }
 
+    ;
+
     @DeleteMapping("/{urlKey}")
     public ResponseEntity<String> removeUrl(@PathVariable String urlKey) {
         if (urlService.removeUrl(urlKey)) {
@@ -65,4 +53,25 @@ public class RestApiController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    ;
+
+
+    @PostMapping("/api/v1/{clientDB}")
+    public ResponseEntity<String> addUrl(@RequestBody URL url, @PathVariable String clientDB) {
+
+        String response = urlService.createUrl(clientDB, url);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    ;
+
+
+    @GetMapping("/get/{clientdb}")
+    public String findFromDatabase(@PathVariable String clientdb) {
+        return urlService.getClientNames(clientdb);
+    }
+
+    ;
+
 }
