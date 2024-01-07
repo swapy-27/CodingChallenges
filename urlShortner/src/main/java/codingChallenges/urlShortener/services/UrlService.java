@@ -6,6 +6,7 @@ import codingChallenges.urlShortener.entity.Response;
 import codingChallenges.urlShortener.entity.ResponseDTO;
 import codingChallenges.urlShortener.entity.URL;
 import codingChallenges.urlShortener.repositories.UrlShortenerRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ public class UrlService {
     @Autowired
     private UrlShortenerRepository urlShortenerRepository;
 
-
+    @Transactional
     public Response generateShortUrl(String originalUrl) {
         //check if exists return same
         //else generate new Url

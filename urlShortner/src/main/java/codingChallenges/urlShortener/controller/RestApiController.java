@@ -11,21 +11,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+import java.util.Map;
 
+@RestController
 public class RestApiController {
     @Autowired
     private UrlService urlService;
 
     @PostMapping("/api/v1/shortUrl")
-    public ResponseEntity<Response> addUrl(@RequestBody String originalUrl) {
+    public ResponseEntity<String> addUrl( @RequestBody Map<String, String> requestBody) {
 
-        Response responseDTO = urlService.generateShortUrl(originalUrl);
+        Response responseDTO = urlService.generateShortUrl(requestBody.get("originalUrl"));
 
         if (responseDTO.getClass() == ResponseDTO.class) {
-            return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+            return new ResponseEntity<>(responseDTO.toString(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(responseDTO, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(responseDTO.toString(), HttpStatus.BAD_REQUEST);
         }
     }
 

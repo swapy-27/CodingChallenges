@@ -84,7 +84,6 @@ public class DatabaseConfiguration {
     }
 
     @Bean(name = "transactionManager")
-//    @Qualifier("transactionManager")
     public PlatformTransactionManager multiTransactionManager(@Qualifier("entityManager") EntityManagerFactory multiEntityManager) {
         JpaTransactionManager transactionManager
                 = new JpaTransactionManager(multiEntityManager);
