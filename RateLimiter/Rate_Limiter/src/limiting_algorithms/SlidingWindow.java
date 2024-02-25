@@ -22,4 +22,9 @@ public class SlidingWindow implements Limiter{
     public Boolean grantAccess() {
         return true;
     }
+
+    @Override
+    public Boolean grantAccess(String ipAddress) {
+        return null;
+    }
 }

@@ -19,24 +19,13 @@ public class Server {
         //server which will listen at  port 80
         ServerSocket server = new ServerSocket(80);
 
-
         while (true) {
             Socket clientConnection = server.accept();
-
             System.out.println("Client " + clientConnection.getInetAddress() + "  Port = " + clientConnection.getPort());
-            //Implement Rate Limiting Here
-            Boolean access = limiter.grantAccess();
-
-
 
             //handling every client using new Thread
-            if(access){
-                Thread thread = new ClientThread(clientConnection);
-                thread.start();
-            }else {
-                System.out.println("Don't exploit server buddy!");
-            }
-
+            Thread thread = new ClientThread(clientConnection, limiter);
+            thread.start();
 
         }
     }
@@ -57,14 +46,14 @@ public class Server {
         String input = sc.next();
 
 
-        switch(input){
-            case  "1":
+        switch (input) {
+            case "1":
                 limiter = new FixedWindow();
                 break;
-            case  "2":
+            case "2":
                 limiter = new SlidingWindow();
                 break;
-            case  "3":
+            case "3":
                 limiter = new TokenBucket();
                 break;
             default:

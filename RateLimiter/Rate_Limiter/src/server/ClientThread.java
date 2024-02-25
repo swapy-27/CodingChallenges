@@ -1,5 +1,5 @@
 package server;
-
+import limiting_algorithms.Limiter;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 class ClientThread extends Thread {
 
     private Socket client;
+    private Limiter limiter;
     String responseHtml =
             "<!DOCTYPE html>\n" +
                     "<html lang=\"en\">\n" +
@@ -21,8 +22,9 @@ class ClientThread extends Thread {
                     "  </body>\n" +
                     "</html>";
 
-    ClientThread(Socket client) {
+    ClientThread(Socket client, Limiter limiter) {
         this.client = client;
+        this.limiter = limiter;
     }
 
 
@@ -32,9 +34,27 @@ class ClientThread extends Thread {
 
 
         //check can u allow this req or not ?
+        //Implement Rate Limiting Here
+        Boolean access = limiter.grantAccess(String.valueOf(client.getInetAddress()));
+        try {
+            if (access) {
+                performOperation();
+            } else {
+                DataOutputStream dout = new DataOutputStream(client.getOutputStream());
+                String httpResponse = "HTTP/1.1 " + 429 + " " + "Too Many Requests" + "\r\n\r\n";
+                dout.write(httpResponse.getBytes(StandardCharsets.UTF_8));
+                dout.flush();
+                dout.close();
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 
 
+    }
 
+
+    public void performOperation() {
         try {
             //print request information
             BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
