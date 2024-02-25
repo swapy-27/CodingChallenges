@@ -10,7 +10,4 @@ public interface UrlShortenerRepository extends CrudRepository<URL, Long> {
      URL findByUniqueKey(String uniqueKey);
      URL  findByOriginalUrl(String originalUrl);
 
-
-
-
 }
