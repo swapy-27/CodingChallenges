@@ -18,10 +18,7 @@ public class SlidingWindow implements Limiter{
         maxTime = 10;
     }
 
-    @Override
-    public Boolean grantAccess() {
-        return true;
-    }
+
 
     @Override
     public Boolean grantAccess(String ipAddress) {

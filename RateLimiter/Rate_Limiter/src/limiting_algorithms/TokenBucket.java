@@ -15,10 +15,6 @@ public class TokenBucket implements Limiter {
         userMap = new HashMap<>();
     }
 
-    @Override
-    public Boolean grantAccess() {
-        return null;
-    }
 
     @Override
     public synchronized Boolean  grantAccess(String ipAddress) {
