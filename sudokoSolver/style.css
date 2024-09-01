@@ -1,0 +1,37 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+#sudoku-grid {
+    display: grid;
+    grid-template-columns: repeat(9, 40px);
+    grid-gap: 1px;
+    margin: 0 auto;
+    width: 362px; /* 9 cells * 40px + gaps */
+}
+
+.cell {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    border: 1px solid #ddd;
+    font-size: 18px;
+    box-sizing: border-box;
+}
+
+.cell.blank {
+    background-color: #f9f9f9;
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+}
